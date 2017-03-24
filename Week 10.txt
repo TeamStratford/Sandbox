@@ -1,0 +1,4 @@
+Objectives:
+- Parsing 1st dataset
+- Graphics on R
+- User interface integration
