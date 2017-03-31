@@ -75,7 +75,6 @@ foreach my $line (@data)
 		open my $fp_save, '>>', "save_".$file_name
 		or die "Cannot open save file";
 
-		print $fp_save '"'."GEO".'"'.",".'"'."ID".'"'.",".'"'."START_LN".'"'.","..'"'."END_LN".'"'."\n";
 		for(0 .. $column_counter)
 		{
 			if(exists $geo_index{$data[$geo_col]})
@@ -105,6 +104,7 @@ foreach my $line (@data)
 					#      This did not affect any other datapoints.
 					if($data[$geo_col] eq "Canada")
 					{
+						print $fp_save '"'."geo_loc".'"'.",".'"'."id".'"'.",".'"'."start_line".'"'.",".'"'."end_line",'"'."\n";
 						$geo_line_start{$data[$geo_col]} = $row_counter-5;
 					}
 					else
