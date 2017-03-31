@@ -1,3 +1,4 @@
+
 #!/usr/bin/perl
 #
 #   Packages and modules
@@ -9,8 +10,7 @@ use Statistics::R;
 
 my $infilename;
 my $pdffilename;
-#my $graphname;
-#my $length;
+my $graphans;
 
 #
 #   Check that you have the right number of parameters
@@ -27,17 +27,12 @@ if ($#ARGV != 1 ) {
 print "input file = $infilename\n";
 print "pdf file = $pdffilename\n";
 
-#Hoping to use the below and the if/else to title the graph: unclear if this is possible
+#asking user if they want a line graph
+print "Graph your requested data? Type 'Y' for yes and anything else for no\n";
 
-#print "What is the title of your graph?";
-#$graphname = <STDIN>;
+$graphans = <STDIN>;
 
-#print $graphname;
-
-#$length = length( $graphname );
-
-#if($length >= 1)
-#{
+if ($graphans eq "Y\n"){ 
 
     # Create a communication bridge with R and start R
     my $R = Statistics::R->new();
@@ -60,6 +55,6 @@ print "pdf file = $pdffilename\n";
     $R->run(q`dev.off()`);
 
     $R->stop();
-#}else{
- #   print "Try again."
-  #  }
+}else{
+   print "No Graph.\n"
+   }
