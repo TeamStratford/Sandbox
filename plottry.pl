@@ -50,7 +50,7 @@ if ($graphans eq "Y\n"){
     $R->run(qq`data <- read.csv("$infilename")`);
 
     # plot the data as a line plot with each point outlined
-    $R->run(q`ggplot(data, aes(x=Year, y=Incidents, colour=Crime, group=Crime)) + geom_line() + geom_point(size=2) + ggtitle("Your Graph")`);
+    $R->run(q`ggplot(data, aes(x=Year, y=Incidents, colour=Subject, group=Subject)) + geom_line() + geom_point(size=2) + ggtitle("Your Graph")`);
        
     # close down the PDF device
     $R->run(q`dev.off()`);
