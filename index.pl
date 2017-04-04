@@ -33,10 +33,14 @@ my $coordinate_col = 0;
 my $geo_col = 0;
 my $violation_col = 0;
 my $statistic_col;
+
 my %geo_index;
 my %geo_line_start;
 my %geo_line_end;
 
+my %violation_index;
+my %violation_line_start;
+my %violation_line_end;
 foreach my $line (@data)
 {
 	if($csv->parse( $line))
@@ -72,14 +76,51 @@ foreach my $line (@data)
 
 
 		my $previous_location = 0;
-		open my $fp_save, '>>', "save_".$file_name
+		my $previous_violation = 0;
+
+		open my $fp_save_geo, '>>', "save_geo_".$file_name
+		or die "Cannot open save file";
+
+		open my $fp_save_violation, '>>', "save_violation_".$file_name
 		or die "Cannot open save file";
 
 		for(0 .. $column_counter)
 		{
 			if(exists $geo_index{$data[$geo_col]})
 			{
+				if(exists $violation_index{$data[$geo_col]}{$data[$violation_col]})
+				{
+					
+				}
+				else
+				{
+					if($data[$violation_col] ne "VIOLATIONS")
+					{
+						if(%violation_index and $previous_violation ne $data[$violation_col])
+						{
+							$violation_line_end{$data[$previous_violation]} = $row_counter - 1;
+							print $fp_save_violation $violation_line_end{$data[$previous_violation]}."\n";
+						}
 
+						my @tokens = split(/\./, $data[$coordinate_col]);
+						$violation_index{$data[$geo_col]}{$data[$violation_col]} = $tokens[1];
+
+						if($data[$violation_col] eq "Total, all violations")
+						{
+							print $fp_save_violation '"'."location".'"'.",".'"'."violation".'"'.",".'"'."id".'"'.",".'"'."start_line".'"'.",".'"'."end_line",'"'."\n";
+							$violation_line_start{$data[$violation_col]} = $row_counter-5;
+						}
+						else
+						{
+							$violation_line_start{$data[$violation_col]} = $row_counter;
+						}
+						print $fp_save_violation '"'.$data[$geo_col].'"'.",";
+						print $fp_save_violation '"'.$data[$violation_col].'"'.",";
+						print $fp_save_violation $violation_index{$data[$geo_col]}{$data[$violation_col]}.",";
+						print $fp_save_violation $violation_line_start{$data[$violation_col]}.",";
+						$previous_violation = $violation_col;
+					}
+				}	
 			}
 			else
 			{
@@ -88,7 +129,7 @@ foreach my $line (@data)
 					if(%geo_index and $previous_location ne $data[$geo_col])
 					{
 						$geo_line_end{$data[$previous_location]} = $row_counter - 1;
-						print $fp_save $geo_line_end{$data[$previous_location]};
+						print $fp_save_geo $geo_line_end{$data[$previous_location]};
 					}
 
 					#Split coordinate from decimal values
@@ -104,25 +145,26 @@ foreach my $line (@data)
 					#      This did not affect any other datapoints.
 					if($data[$geo_col] eq "Canada")
 					{
-						print $fp_save '"'."geo_loc".'"'.",".'"'."id".'"'.",".'"'."start_line".'"'.",".'"'."end_line",'"'."\n";
+						print $fp_save_geo '"'."geo_loc".'"'.",".'"'."id".'"'.",".'"'."start_line".'"'.",".'"'."end_line",'"'."\n";
 						$geo_line_start{$data[$geo_col]} = $row_counter-5;
 					}
 					else
 					{
 						$geo_line_start{$data[$geo_col]} = $row_counter;
-						print $fp_save "\n";
+						print $fp_save_geo "\n";
 					}
+
 					print "Loaded: ".$data[$geo_col]."\n";
 
-					print $fp_save '"'.$data[$geo_col].'"'.",";
-					print $fp_save $geo_index{$data[$geo_col]}.",";
-					print $fp_save $geo_line_start{$data[$geo_col]}.",";
+					print $fp_save_geo '"'.$data[$geo_col].'"'.",";
+					print $fp_save_geo $geo_index{$data[$geo_col]}.",";
+					print $fp_save_geo $geo_line_start{$data[$geo_col]}.",";
 					$previous_location = $geo_col;
 				}
 			}
 
 		}
-		close $fp_save;
+		close $fp_save_geo;
 		$row_counter++;
 	}
 	
