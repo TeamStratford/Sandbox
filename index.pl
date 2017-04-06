@@ -57,7 +57,7 @@ my @val;
 #####################init()#####################
 # Description: Loads the crime data CSV to memory and loads the values 
 #              of the columns into an associaive array if all save files
-#              do not already exist. 
+#              do not already exist (NOT YET, SOON....). 
 #	       
 #              The hash values are based off of the coordinate column of 
 #              the CSV file for 'index' vars. Each column will also have
@@ -66,7 +66,7 @@ my @val;
 # Usage:       init();
 #
 # Preconditions: Crime data CSV file exists and atleast one of the save files
-#		 are not present.
+#		 are not present.(NOT YET, SOON....)
 #
 # Postconditions: Coordinate values are assigned to each column by assiociating
 #		  string values into a associative arrays. Start lines and end lines of 
@@ -253,6 +253,70 @@ close $fp_save_violation;
 close $fp_save_statistic;
 }
 
+sub searchGeoVio
+{
+	my ($geo_name, $vio_name) = @_;
+	my $geo_copy = lc($geo_name);
+	my $vio_copy = lc($vio_name);
+	if(exists $violation_index{$geo_copy}{$vio_copy})
+	{
+
+		readLines($violation_line_start{$geo_copy}{$vio_copy}, $violation_line_end{$geo_copy}{$vio_copy});
+	}
+	
+}
+
+sub searchGeoStat
+{
+	my ($geo_name, $stat_name) = @_;
+	my $geo_copy = lc($geo_name);
+	my $stat_copy = lc($stat_name);
+	
+	my @vio_keys = keys %violation_index;
+	
+
+	for my $primary_key (keys %violation_index)
+	{
+		my $child_key = $violation_index{$primary_key};
+		for my $secondary_key (keys %$child_key)
+		{
+			if(exists $statistic_index{$geo_copy}{$secondary_key}{$stat_copy})
+			{
+				readLines($statistic_line_start{$geo_copy}{$secondary_key}{$stat_copy}, $statistic_line_end{$geo_copy}{$secondary_key}{$stat_copy});
+			}
+		}
+	}
+}
+
+sub searchVioStat
+{
+	my ($vio_name, $stat_name) = @_;
+	my $vio_copy = lc($vio_name);
+	my $stat_copy = lc($stat_name);
+	my @location_keys = %geo_index;
+	
+	while(@location_keys)
+	{
+		my $location_key = pop(@location_keys);
+		if(exists $statistic_index{$location_key}{$vio_copy}{$stat_copy})
+		{
+			readLines($statistic_line_start{$location_key}{$vio_copy}{$stat_copy}, $statistic_line_end{$location_key}{$vio_copy}{$stat_copy});
+		}
+	}
+}
+sub searchGeoVioStat
+{
+	my ($geo_name, $vio_name, $stat_name) = @_;
+	my $geo_copy = lc($geo_name);
+	my $vio_copy = lc($vio_name);
+	my $stat_copy = lc($stat_name);
+	if(exists $statistic_index{$geo_copy}{$vio_copy}{$stat_copy})
+	{
+
+		readLines($statistic_line_start{$geo_copy}{$vio_copy}{$stat_copy}, $statistic_line_end{$geo_copy}{$vio_copy}{$stat_copy});
+	}
+	
+}
 sub searchGeo
 {
 	if(%geo_index)
@@ -262,15 +326,12 @@ sub searchGeo
 	
 		if(exists $geo_index{$loc_copy})
 		{
-			print $geo_index{$loc_copy}." ";
-			print $geo_line_start{$loc_copy}." ";
-			print $geo_line_end{$loc_copy}."\n";
 			readLines($geo_line_start{$loc_copy}, $geo_line_end{$loc_copy});
 		}
 	}
 	else
 	{
-		print "ERROR: geo_index not initialized\n";
+		warn "ERROR: geo_index not initialized\n";
 	}
 
 }
@@ -286,16 +347,13 @@ sub searchVio
 			my $loc_key = pop(@loc_keys);
 			if(exists $violation_index{$loc_key}{$vio_copy})
 			{
-				print $violation_index{$loc_key}{$vio_copy}." ";
-				print $violation_line_start{$loc_key}{$vio_copy}." ";
-				print $violation_line_end{$loc_key}{$vio_copy}."\n";
 				readLines($violation_line_start{$loc_key}{$vio_copy}, $violation_line_end{$loc_key}{$vio_copy});
 			}
 		}
 	}
 	else
 	{
-		print "ERROR: violation_index not initialized\n";
+		warn "ERROR: violation_index not initialized\n";
 	}
 
 }
@@ -316,7 +374,6 @@ sub searchStat
 			my $child_key = $violation_index{$primary_key};
 			for my $secondary_key (keys %$child_key)
 			{
-				print $primary_key." ".$secondary_key."\n";
 				if(exists $statistic_index{$primary_key}{$secondary_key}{$stat_copy})
 				{
 					readLines($statistic_line_start{$primary_key}{$secondary_key}{$stat_copy}, $statistic_line_end{$primary_key}{$secondary_key}{$stat_copy});
@@ -327,7 +384,7 @@ sub searchStat
 	}
 	else
 	{
-		print "ERROR: statistic_index not initialized\n";
+		warn "ERROR: statistic_index not initialized\n";
 	}
 
 }
@@ -348,6 +405,8 @@ sub readLines
 	}
 }
 init();
-searchStat("actual incidents");
-readLines(2,5);
+#searchGeoVioStat("canada", "murder, first degree", "actual incidents");
+searchVioStat("murder, first degree", "actual incidents");
+#searchGeoStat("canada", "actual incidents");
+#readLines(2,5);
 
