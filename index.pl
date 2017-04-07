@@ -733,9 +733,9 @@ sub readLines
 		while ($minimum <= $maximum)
 		{
 			print $fp_output $year[$minimum].",";
-			print $fp_output $geo[$minimum].",";
-			print $fp_output $vio[$minimum].",";
-			print $fp_output $sta[$minimum].",";
+			print $fp_output '"'.$geo[$minimum].'"'.",";
+			print $fp_output '"'.$vio[$minimum].'"'.",";
+			print $fp_output '"'.$sta[$minimum].'"'.",";
 			#print $fp_output $vect[$minimum].",";
 			#print $fp_output $coord[$minimum].",";
 			print $fp_output $val[$minimum]."\n";
@@ -750,9 +750,9 @@ sub readLines
 			if($year[$minimum] >=$min_year && $year[$minimum] <= $max_year)
 			{
 				print $fp_output $year[$minimum].",";
-				print $fp_output $geo[$minimum].",";
-				print $fp_output $vio[$minimum].",";
-				print $fp_output $sta[$minimum].",";
+				print $fp_output '"'.$geo[$minimum].'"'.",";
+				print $fp_output '"'.$vio[$minimum].'"'.",";
+				print $fp_output '"'.$sta[$minimum].'"'.",";
 				#print $fp_output $vect[$minimum].",";
 				#print $fp_output $coord[$minimum].",";
 				print $fp_output $val[$minimum]."\n";
