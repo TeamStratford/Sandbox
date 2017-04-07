@@ -8,7 +8,7 @@
 #   Date created : 29 Mar 17 
 #   Release date : 06 Apr 17 
 #   Last update  : 06 Apr 17  
-#   Machine/System Compiled/Run on : Oracle JVM running Debian Jessie
+#   Machine/System Interpreted/Run on : Oracle JVM running Debian Jessie
 #
 
 #
