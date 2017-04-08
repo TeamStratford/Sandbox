@@ -744,7 +744,14 @@ sub readLines
 	}
 	elsif(@_ == 4)
 	{
-		$minimum = $minimum +5;
+		if ($minimum < 6)
+		{
+			$minimum = $minimum + 5;
+		}
+		else
+		{
+			$minimum = $minimum;
+		} 
 		while ($minimum <= $maximum)
 		{
 			if($year[$minimum] >=$min_year && $year[$minimum] <= $max_year)
@@ -768,7 +775,7 @@ sub readLines
 }
 
 
-#init();
+init();
 #searchGeoVio("alberta", "murder, first degree");
 #searchGeoVio("alberta", "murder, first degree", 2003, 2003);
 
@@ -779,7 +786,7 @@ sub readLines
 #searchVioStat("murder, first degree", "actual incidents", 2003, 2003);
 
 #searchGeoVioStat("alberta", "murder, first degree", "actual incidents");
-#searchGeoVioStat("alberta", "murder, first degree", "actual incidents",2003, 2003);
+searchGeoVioStat("alberta", "murder, first degree", "actual incidents", 1998, 2003);
 
 #searchGeo("alberta");
 #searchGeo("alberta", 2003, 2003);
