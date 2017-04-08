@@ -306,6 +306,7 @@ sub init
 #		  
 sub searchGeoVio
 {
+	unlinkFile();
 	my ($geo_name, $vio_name, $min_year, $max_year) = @_;
 	if(@_ == 2)
 	{
@@ -354,6 +355,7 @@ sub searchGeoVio
 #
 sub searchGeoStat
 {
+	unlinkFile();
 	my ($geo_name, $stat_name, $min_year, $max_year) = @_;
 	if(@_ == 2)
 	{
@@ -420,6 +422,7 @@ sub searchGeoStat
 #
 sub searchVioStat
 {
+	unlinkFile();
 	my ($vio_name, $stat_name, $min_year, $max_year) = @_;
 	if(@_ == 2)
 	{
@@ -477,6 +480,7 @@ sub searchVioStat
 #
 sub searchGeoVioStat
 {
+	unlinkFile();
 	my ($geo_name, $vio_name, $stat_name, $min_year, $max_year) = @_;
 	if(@_ == 3)
 	{
@@ -527,6 +531,7 @@ sub searchGeoVioStat
 #
 sub searchGeo
 {
+	unlinkFile();
 	my ($geo_location, $min_year, $max_year) = @_;
 	if(@_ == 1)
 	{
@@ -586,6 +591,7 @@ sub searchGeo
 #
 sub searchVio
 {
+	unlinkFile();
 	my ($vio_name, $min_year, $max_year) = @_;
 	if(@_ == 1)
 	{
@@ -654,6 +660,7 @@ sub searchVio
 #
 sub searchStat
 {
+	unlinkFile();
 	my ($stat_name, $min_year, $max_year) = @_;
 	if(@_ == 1)
 	{
@@ -718,14 +725,16 @@ sub searchStat
 	}
 
 }
-
-sub readLines
+sub unlinkFile
 {
-	my ($minimum, $maximum, $min_year, $max_year) = @_;
 	if ((-e "output.csv"))
 	{
 		unlink("output.csv");
 	}
+}
+sub readLines
+{
+	my ($minimum, $maximum, $min_year, $max_year) = @_;
 	open my $fp_output, '>>', "output.csv" or die "Unable to open file: output.csv\n";
 	print $fp_output '"'."year".'"'.",".'"'."geo_loc".'"'.",".'"'."violations".'"'.",".'"'."statistic".'"'.",".'"'."value".'"'."\n";
 	if(@_ == 2)
@@ -775,18 +784,18 @@ sub readLines
 }
 
 
-init();
+#init();
 #searchGeoVio("alberta", "murder, first degree");
 #searchGeoVio("alberta", "murder, first degree", 2003, 2003);
 
 #searchGeoStat("alberta", "actual incidents");
-#searchGeoStat("alberta", "actual incidents", 2003, 2003);
+#searchGeoStat("alberta", "actual incidents", 1998, 2003);
 
 #searchVioStat("murder, first degree", "actual incidents");
 #searchVioStat("murder, first degree", "actual incidents", 2003, 2003);
 
 #searchGeoVioStat("alberta", "murder, first degree", "actual incidents");
-searchGeoVioStat("alberta", "murder, first degree", "actual incidents", 1998, 2003);
+#searchGeoVioStat("alberta", "murder, first degree", "actual incidents", 1998, 2003);
 
 #searchGeo("alberta");
 #searchGeo("alberta", 2003, 2003);
